@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.myshop"})
+@ComponentScan(basePackages = {"com.myshop.*"})
 public class myshoppingAppApplication {
 
 	public static void main(String[] args) {
