@@ -66,13 +66,22 @@ public class MainController {
 	public Iterable<ProductCategory> findAllCategories(){
 		return pcService.findAllCategories();
 	} 
+	@PostMapping("/categories")
+	public void addCategory(@RequestBody String catName) {
+		pcService.registerCategory(catName);
+	} 
+	
+	@GetMapping("/categories/params")
+	public void addCategoryWithparams(@RequestParam("catName") String catName) {
+		pcService.registerCategory(catName);
+	}
 
 	@GetMapping("/category/{id}")
 	public ProductCategory findCategory(@PathVariable long id){
 		return pcService.findCategory(id);
 	} 
 
-	@DeleteMapping("/category/{id}")
+	@DeleteMapping("/category/delete/{id}")
 	public void deleteProductCategory(@PathVariable long id) {
 		pcService.deleteProductCategory(id);
 	} 

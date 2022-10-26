@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myshop.dao.ProductCategoryDao;
+import com.myshop.dao.ProductDao;
 import com.myshop.model.ProductCategory;
 import com.myshop.pojos.Message;
 
@@ -13,23 +14,27 @@ import com.myshop.pojos.Message;
 public class ProductCategoryService {
 
 	@Autowired
-	ProductCategoryDao dao;
+	ProductCategoryDao pcdao;
+	
+	@Autowired
+	ProductDao pdao;
 
 	Message m = new Message();
 
 	public ProductCategory findCategory(long id) {
-		return dao.findById(id).get();
+		return pcdao.findById(id).get();
 	}
 
 	public List<ProductCategory> findAllCategories() {
-		return dao.findAll();
+		System.out.println("in pc service");
+		return pcdao.findAll();
 	}
 
 	public Message registerCategory( String category) {
 		ProductCategory pc = new ProductCategory();
 		pc.setCategoryName(category);
 		try {
-			dao.save(pc);
+			pcdao.save(pc);
 			m.setInfo("Product category added ");
 		} catch(Exception ex) {
 			m.setInfo("Error:  "+ex);
@@ -38,10 +43,10 @@ public class ProductCategoryService {
 	}
 
 	public Message updateCategory( long id, String catName) {
-		ProductCategory pc = (ProductCategory) dao.findById(id).get();
+		ProductCategory pc = pcdao.findById(id).orElse(new ProductCategory());
 		pc.setCategoryName(catName);
 		try {
-			dao.save(pc);
+			pcdao.save(pc);
 			m.setInfo("Product category updated ");
 		} catch(Exception ex) {
 			m.setInfo("Error:  "+ex);
@@ -50,12 +55,13 @@ public class ProductCategoryService {
 	}
 
 	public String deleteProductCategory(long id) {
-		return deleteById(id);
+		 pdao.deleteAllProductsByProductCategoryId(id);
+		 return deleteById(id);
 	}
 	private String deleteById(long id) {
 
 		try {
-			dao.deleteById(id);
+			pcdao.deleteById(id);
 			return "Category Deleted";
 
 		} catch(Exception ex) {

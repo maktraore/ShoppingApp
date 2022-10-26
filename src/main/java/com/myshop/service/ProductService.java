@@ -66,9 +66,8 @@ public class ProductService {
 
 	public Message registerProduct( ProductDetails pd) {
 		Product p= new Product();
-		ProductCategory pc = new ProductCategory();
-		if(pd != null) {
-			p.setId(pd.getId());
+		ProductCategory pc = pcdao.findById(pd.getCategoryId()).orElse(new ProductCategory());
+		if(pd != null ) {
 			p.setDateCreated(pd.getDateCreated());
 			p.setDescription(pd.getDescription());
 			p.setImageUrl(pd.getImageUrl());
@@ -78,10 +77,13 @@ public class ProductService {
 			p.setUnitPrice(pd.getUnitPrice());
 			p.setUnitsInStock(pd.getUnitsInStock());
 			p.setActive(pd.isActive());
-			pc.setCategoryName(pd.getCategoryName());
-			pc.setId(pd.getCategoryId());
-			p.setCategory(pc);
-			return addProduct(p);
+			if(pc.getId() == null) {
+				pc.setCategoryName(pd.getCategoryName());
+				pcdao.save(pc);
+			}else {
+				p.setCategory(pc);
+			}
+				 addProduct(p);
 		}else {
 			m.setInfo("Product Info added");
 		}
